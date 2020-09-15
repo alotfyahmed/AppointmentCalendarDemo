@@ -5,6 +5,6 @@
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
 
-    <uc1:AppointmentCalendarUserControl runat="server" id="AppointmentCalendarUserControl" />
+    <uc1:AppointmentCalendarUserControl runat="server" id="ucAppointmentCalendarUserControl" />
 
 </asp:Content>

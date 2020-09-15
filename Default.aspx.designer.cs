@@ -15,12 +15,12 @@ namespace AppointmentCalendarDemo
     {
 
         /// <summary>
-        /// AppointmentCalendarUserControl control.
+        /// ucAppointmentCalendarUserControl control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::AppointmentCalendarDemo.UserControls.AppointmentCalendarUserControl AppointmentCalendarUserControl;
+        protected global::AppointmentCalendarDemo.UserControls.AppointmentCalendarUserControl ucAppointmentCalendarUserControl;
     }
 }

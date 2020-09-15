@@ -32,11 +32,14 @@ namespace AppointmentCalendarDemo
                 {
                     StartTime = day + slot,
                     EndTime = day + slot + SlotSize,
-                    Status = AppointmentSlotStatus.Available
+                    Status= AppointmentSlotStatus.Available
                 });
 
                 slot += SlotSize;
             }
+
+            appointmentSlots[0].Status = AppointmentSlotStatus.NotAvailable;
+            appointmentSlots[1].Status = AppointmentSlotStatus.PartiallyAvailable;
 
             return appointmentSlots;
         }
@@ -76,7 +79,8 @@ namespace AppointmentCalendarDemo
     public enum AppointmentSlotStatus
     {
         Available,
-        NotAvailable
+        NotAvailable,
+        PartiallyAvailable
     }
 
     public enum AppointmentDayStatus

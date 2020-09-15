@@ -17,9 +17,6 @@
         list-style-type: none;
     }
 
-    body {
-        font-family: Verdana, sans-serif;
-    }
 
     .month {
         padding: 20px 25px;
@@ -84,34 +81,44 @@
             background-color: #fdfdfd;
         }
 
-            .days .li .active {
+        /*.days .li .active {
                 padding: 5px;
                 background: #cccccc;
                 color: white !important
-            }
+            }*/
 
-            .days .li .empty {
-                color: orange;
-                background: #5555;
-                color: white !important
-            }
+        .days .empty {
+            /*   color: orange;
+                background: #5555;*/
+            color: #dedada;
+        }
+
+        .days .holiday {
+            background: #bdbcbc55;
+        }
+
+        .days .selected {
+            background-color: #374abd;
+            color: white !important;
+        }
 
     .slots {
         padding: 10px 0;
         margin: 0;
+        text-align: center;
     }
 
         .slots .li {
             list-style-type: none;
             display: inline-block;
-            width: 40px%;
-            height: 18%;
-            text-align: left;
+            width: 70px;
+            height: 30px;
             vertical-align: top;
             margin-bottom: 5px;
             margin-right: 10px;
             font-size: 12px;
             color: #777;
+            border: 1px solid #eeeeee;
         }
 
             .slots .li .active {
@@ -119,6 +126,25 @@
                 background: #1abc9c;
                 color: white !important
             }
+
+        .slots .available {
+            background-color: #1abc9c;
+            color: white;
+        }
+
+        .slots .partiallyavailable {
+            background-color: yellow;
+        }
+
+        .slots .notavailable {
+            background-color: #bf3636;
+            color: white;
+        }
+
+        .slots .notavailable {
+            background-color: #bf3636;
+            color: white;
+        }
 
     /* Add media queries for smaller screens */
     @media screen and (max-width:720px) {
@@ -164,12 +190,14 @@
         <li>السبت</li>
     </ul>
 
-    <asp:Repeater ID="rpMonthDays" runat="server">
+    <asp:Repeater ID="rpMonthDays" runat="server" OnItemDataBound="rpMonthDays_ItemDataBound">
         <HeaderTemplate>
             <div class="days">
         </HeaderTemplate>
         <ItemTemplate>
+
             <asp:Button ID="btnDay" runat="server" CssClass='li <%= DataBinder.Eval(Container.DataItem, "Status")%>' CommandName="DaySelected" CommandArgument='<%# DataBinder.Eval(Container.DataItem, "Day")%>' Text='<%# DataBinder.Eval(Container.DataItem, "Day") !=null?  ((DateTime)DataBinder.Eval(Container.DataItem, "Day")).ToString("dd"):"" %>'></asp:Button>
+
         </ItemTemplate>
 
         <FooterTemplate>
@@ -177,15 +205,29 @@
         </FooterTemplate>
     </asp:Repeater>
 
-    <asp:Repeater ID="rpSlots" runat="server">
+    <asp:Repeater ID="rpSlots" runat="server" OnItemDataBound="rpSlots_ItemDataBound">
         <HeaderTemplate>
             <div class="slots">
+                <div>
+                    <div class="li" style="padding-top: 5px; width: 100px; font-weight: bold; margin-left:0px">
+                       اليوم
+                    </div>
+                    <div class="li" style="padding-top: 5px; width: 100px; margin-left:0px">
+                        <%# SelectedDay.Value.ToString("yyyy/MM/dd") %>
+                    </div>
+                </div>
+                <div>
+                    <div class="li" style="padding-top: 5px; width: 100px; font-weight: bold;">
+                        المواعيد
+                    </div>
         </HeaderTemplate>
         <ItemTemplate>
-            <asp:Button ID="btnSlot" runat="server" CssClass="li" CommandName="SlotSelected" CommandArgument='<%# DataBinder.Eval(Container.DataItem, "StartTime")%>' Text='<%# ((DateTime)DataBinder.Eval(Container.DataItem, "StartTime")).ToString("hh") +" "+((DateTime)DataBinder.Eval(Container.DataItem, "EndTime")).ToString("hh ") %>'></asp:Button>
+
+            <asp:Button ID="btnSlot" runat="server" CssClass="li " CommandName="SlotSelected" CommandArgument='<%# DataBinder.Eval(Container.DataItem, "StartTime")%>' Text='<%# ((DateTime)DataBinder.Eval(Container.DataItem, "StartTime")).ToString("hh") +" - "+((DateTime)DataBinder.Eval(Container.DataItem, "EndTime")).ToString("hh ") %>'></asp:Button>
+
         </ItemTemplate>
         <FooterTemplate>
-            </div>
+            </div></div>
         </FooterTemplate>
     </asp:Repeater>
 </div>
