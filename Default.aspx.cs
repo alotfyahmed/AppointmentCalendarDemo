@@ -13,13 +13,15 @@ namespace AppointmentCalendarDemo
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            this.ucAppointmentCalendarUserControl.MinimumDate = DateTime.Today;
-            this.ucAppointmentCalendarUserControl.MaximumDate = DateTime.Today.AddMonths(1);
+            
             ucAppointmentCalendarUserControl.OnDaySelected += UcAppointmentCalendarUserControl_OnDaySelected;
 
             if (!Page.IsPostBack)
             {
                 var days = _appointmentsManager.GetAppointmentDays();
+
+                this.ucAppointmentCalendarUserControl.MinimumDate = DateTime.Today;
+                this.ucAppointmentCalendarUserControl.MaximumDate = days.Max(d=>d.Date);
 
                 ucAppointmentCalendarUserControl.AppointmentDays = days.Select(d => new UserControls.AppointmentCalendarDay
                 {

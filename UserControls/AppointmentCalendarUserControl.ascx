@@ -25,12 +25,12 @@
         text-align: center;
     }
 
-        .month ul {
+        .month .ul {
             margin: 0;
             padding: 0;
         }
 
-            .month ul li {
+            .month .ul .li {
                 color: white;
                 font-size: 20px;
                 text-transform: uppercase;
@@ -38,12 +38,12 @@
             }
 
         .month .prev {
-            float: left;
+            float: right;
             padding-top: 5px;
         }
 
         .month .next {
-            float: right;
+            float: left;
             padding-top: 5px;
         }
 
@@ -181,14 +181,16 @@
 <h1>Appointment Calendar</h1>
 <div style="direction: rtl">
     <div class="month">
-        <ul>
-            <li class="prev">
-                <asp:LinkButton runat="server" ID="btnPrevMonth" OnClick="btnPrevMonth_Click"> &#10095;</asp:LinkButton></li>
-            <li class="next">
-                <asp:LinkButton runat="server" ID="btnNextMonth" OnClick="btnNextMonth_Click"> &#10094;</asp:LinkButton></li>
-            <li><%= DisplayedMonth.ToString("MMMM") %> <%= DisplayedMonth.Year %></li>
-            <li><%= HijriDsiplayMonths %></li>
-        </ul>
+        <div class="ul" style="direction: rtl">
+            <div class=" li prev">
+                <asp:LinkButton runat="server" ID="btnPrevMonth" OnClick="BtnPrevMonth_Click">&#10094;</asp:LinkButton>
+            </div>
+            <div class="li next">
+                <asp:LinkButton runat="server" ID="btnNextMonth" OnClick="BtnNextMonth_Click">  &#10095;</asp:LinkButton>
+            </div>
+            <div class="li"><%= DisplayedMonth.GetValueOrDefault().ToString("MMMM") %> <%= DisplayedMonth.GetValueOrDefault().Year %></div>
+            <div class="li"><%= HijriDsiplayMonths %></div>
+        </div>
     </div>
 
     <ul class="weekdays">
@@ -234,6 +236,7 @@
                     <div class="li" style="padding-top: 5px; width: 100px; font-weight: bold;">
                         المواعيد
                     </div>
+                </div>
         </HeaderTemplate>
         <ItemTemplate>
 

@@ -1,7 +1,6 @@
 ﻿using Microsoft.Ajax.Utilities;
 using System;
 using System.Collections.Generic;
-using System.Drawing.Printing;
 using System.Linq;
 using System.Web.UI.WebControls;
 
@@ -146,7 +145,7 @@ namespace AppointmentCalendarDemo.UserControls
             }
         }
 
-        protected DateTime DisplayedMonth
+        protected DateTime? DisplayedMonth
         {
             get
             {
@@ -167,40 +166,30 @@ namespace AppointmentCalendarDemo.UserControls
 
         public override void DataBind()
         {
-            DisplayedMonth = AppointmentDays.First().Day.Value;
+            if (!DisplayedMonth.HasValue)
+            {
+                DisplayedMonth = AppointmentDays.First().Day.Value;
+            }
 
             _displayDays = CloneDays(AppointmentDays);
 
-            _displayDays = _displayDays.Where(d => d.Day.Value.Month == DisplayedMonth.Month).ToList();
+            _displayDays = _displayDays.Where(d => d.Day.Value.Month == DisplayedMonth.Value.Month).ToList();
 
             AddMissingDays(_displayDays);
-            AddHolidayDays(_displayDays);
             AddEmptyDays(_displayDays);
+            AddHolidayDays(_displayDays);
+            
 
-            if (DisplayedMonth > _displayDays.Where(d=> d.Day.HasValue).First().Day)
-            {
-                btnPrevMonth.Enabled = false;
-            }
-
-            if (DisplayedMonth < _displayDays.Where(d => d.Day.HasValue).First().Day)
-            {
-                btnPrevMonth.Enabled = false;
-            }
+            btnPrevMonth.Enabled = (DisplayedMonth.Value.Month > AppointmentDays.Where(d => d.Day.HasValue).First().Day.Value.Month);
+            btnNextMonth.Enabled = (DisplayedMonth.Value.Month < AppointmentDays.Where(d => d.Day.HasValue).Last().Day.Value.Month);
 
             rpMonthDays.DataSource = _displayDays;
             rpMonthDays.DataBind();
 
-            rpSlots.DataSource = this.AppointmentSlots;
+            rpSlots.DataSource = AppointmentSlots;
             rpSlots.DataBind();
         }
 
-        protected void DaySelected(object sender, EventArgs e)
-        {
-            //if (e != null)
-            //{
-            //    Response.Write(DateTime.Parse(e.ToString()));
-            //}
-        }
 
         protected string GetHijriDate(object dataItem)
         {
@@ -216,15 +205,18 @@ namespace AppointmentCalendarDemo.UserControls
 
         protected string HijriDsiplayMonths
         {
-            get{ var hijriMonths = _displayDays.Where(i => i.Day.HasValue)
-                .Select(d => d.Day.Value.ToString("MMMM yyyy", System.Globalization.CultureInfo.CreateSpecificCulture("ar-SA")))
-                .Distinct();
+            get
+            {
+                var hijriMonths = _displayDays.Where(i => i.Day.HasValue)
+               .Select(d => d.Day.Value.ToString("MMMM yyyy", System.Globalization.CultureInfo.CreateSpecificCulture("ar-SA")))
+               .Distinct();
 
                 var hijriDisplayMonths = string.Empty;
 
                 hijriMonths.ForEach(h => hijriDisplayMonths = $"{hijriDisplayMonths} {h}");
 
-                return (hijriDisplayMonths); }
+                return (hijriDisplayMonths);
+            }
         }
 
         protected void Page_Load(object sender, EventArgs e)
@@ -232,6 +224,7 @@ namespace AppointmentCalendarDemo.UserControls
             rpMonthDays.ItemCommand += RpMonthDays_ItemCommand;
             rpSlots.ItemCommand += RpSlots_ItemCommand;
         }
+
         protected void rpMonthDays_ItemDataBound(object sender, RepeaterItemEventArgs e)
         {
             LinkButton dayButton = (LinkButton)e.Item.FindControl("btnDay");
@@ -258,6 +251,7 @@ namespace AppointmentCalendarDemo.UserControls
                 {
                     dayButton.CssClass = $"{dayButton.CssClass} {appointmentCalendarDay.Status.ToString().ToLower()}";
                 }
+
 
                 if (appointmentCalendarDay.Status == AppointmentCalendarDayStatus.Holiday)
                 {
@@ -299,7 +293,6 @@ namespace AppointmentCalendarDemo.UserControls
 
         private void AddEmptyDays(List<AppointmentCalendarDay> displayDays)
         {
-
             var monthFirstDay = (int)displayDays[0].Day.Value.DayOfWeek;
 
             var dummyDaysCount = monthFirstDay - (int)DayOfWeek.Saturday;
@@ -314,7 +307,6 @@ namespace AppointmentCalendarDemo.UserControls
             var monthLasttDay = displayDays.Last().Day.Value.DayOfWeek;
 
             dummyDaysCount = (int)DayOfWeek.Saturday - (int)monthLasttDay;
-
 
             for (int i = 0; i < dummyDaysCount; i++)
             {
@@ -357,6 +349,20 @@ namespace AppointmentCalendarDemo.UserControls
                 }
             }
 
+            var maxDate = displayDays.Max(i => i.Day?.Date);
+
+            if (maxDate.HasValue && maxDate.Value.Day < DateTime.DaysInMonth(maxDate.Value.Year, maxDate.Value.Month))
+            {
+                for (int i = maxDate.Value.Day + 1; i <= DateTime.DaysInMonth(maxDate.Value.Year, maxDate.Value.Month); i++)
+                {
+                    displayDays.Add( new AppointmentCalendarDay
+                    {
+                        Day = new DateTime(maxDate.Value.Year, maxDate.Value.Month, i),
+                        Status = AppointmentCalendarDayStatus.Empty
+                    });
+                }
+            }
+
             return displayDays;
         }
 
@@ -376,9 +382,9 @@ namespace AppointmentCalendarDemo.UserControls
         {
             if (e.CommandName == "DaySelected")
             {
-                this.SelectedDay = DateTime.Parse(e.CommandArgument.ToString());
+                SelectedDay = DateTime.Parse(e.CommandArgument.ToString());
 
-                this.OnDaySelected(this, EventArgs.Empty);
+                OnDaySelected(this, EventArgs.Empty);
             }
         }
 
@@ -392,14 +398,16 @@ namespace AppointmentCalendarDemo.UserControls
             }
         }
 
-        protected void btnPrevMonth_Click(object sender, EventArgs e)
+        protected void BtnPrevMonth_Click(object sender, EventArgs e)
         {
-
+            DisplayedMonth = DisplayedMonth.Value.AddMonths(-1);
+            DataBind();
         }
 
-        protected void btnNextMonth_Click(object sender, EventArgs e)
+        protected void BtnNextMonth_Click(object sender, EventArgs e)
         {
-
+            DisplayedMonth = DisplayedMonth.Value.AddMonths(1);
+            DataBind();
         }
     }
 }
