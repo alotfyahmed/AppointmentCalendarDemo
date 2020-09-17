@@ -32,7 +32,7 @@ namespace AppointmentCalendarDemo
                 {
                     StartTime = day + slot,
                     EndTime = day + slot + SlotSize,
-                    Status= AppointmentSlotStatus.Available
+                    Status = AppointmentSlotStatus.Available
                 });
 
                 slot += SlotSize;
@@ -44,19 +44,21 @@ namespace AppointmentCalendarDemo
             return appointmentSlots;
         }
 
-        public List<AppointmentDay> GetAppointmentDays(DateTime date)
+        public List<AppointmentDay> GetAppointmentDays()
         {
             var appointmentDays = new List<AppointmentDay>();
 
-            for (int i = 1; i <= DateTime.DaysInMonth(date.Year, date.Month); i++)
-            {
-                var dayDate = new DateTime(date.Year, date.Month, i);
+            var dayDate = DateTime.Today;
 
+            for (int i = 1; i <= 70; i++)
+            {
                 appointmentDays.Add(new AppointmentDay
                 {
                     Date = dayDate,
                     Status = (dayDate.DayOfWeek == DayOfWeek.Friday || dayDate.DayOfWeek == DayOfWeek.Saturday) ? AppointmentDayStatus.Holiday : AppointmentDayStatus.Available
                 });
+
+                dayDate = dayDate.AddDays(1);
             }
 
             return appointmentDays;

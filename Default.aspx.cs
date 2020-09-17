@@ -19,7 +19,7 @@ namespace AppointmentCalendarDemo
 
             if (!Page.IsPostBack)
             {
-                var days = _appointmentsManager.GetAppointmentDays(DateTime.Now);
+                var days = _appointmentsManager.GetAppointmentDays();
 
                 ucAppointmentCalendarUserControl.AppointmentDays = days.Select(d => new UserControls.AppointmentCalendarDay
                 {

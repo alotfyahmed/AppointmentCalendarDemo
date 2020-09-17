@@ -15,6 +15,24 @@ namespace AppointmentCalendarDemo.UserControls
     {
 
         /// <summary>
+        /// btnPrevMonth control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton btnPrevMonth;
+
+        /// <summary>
+        /// btnNextMonth control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton btnNextMonth;
+
+        /// <summary>
         /// rpMonthDays control.
         /// </summary>
         /// <remarks>

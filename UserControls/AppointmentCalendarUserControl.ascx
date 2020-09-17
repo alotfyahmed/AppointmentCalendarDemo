@@ -72,7 +72,7 @@
             display: inline-block;
             width: 13.9%;
             height: 18%;
-            text-align: left;
+            text-align: center;
             vertical-align: top;
             margin-bottom: 5px;
             font-size: 12px;
@@ -98,8 +98,16 @@
         }
 
         .days .selected {
-            background-color: #374abd;
+            background-color: #8798ff;
             color: white !important;
+        }
+
+        .days .today {
+            border: 1px solid #ff7c00;
+        }
+
+        .days .gregorian {
+            ;
         }
 
     .slots {
@@ -174,9 +182,12 @@
 <div style="direction: rtl">
     <div class="month">
         <ul>
-            <li class="prev">&#10095;</li>
-            <li class="next">&#10094;</li>
-            <li>August 2017</li>
+            <li class="prev">
+                <asp:LinkButton runat="server" ID="btnPrevMonth" OnClick="btnPrevMonth_Click"> &#10095;</asp:LinkButton></li>
+            <li class="next">
+                <asp:LinkButton runat="server" ID="btnNextMonth" OnClick="btnNextMonth_Click"> &#10094;</asp:LinkButton></li>
+            <li><%= DisplayedMonth.ToString("MMMM") %> <%= DisplayedMonth.Year %></li>
+            <li><%= HijriDsiplayMonths %></li>
         </ul>
     </div>
 
@@ -196,8 +207,11 @@
         </HeaderTemplate>
         <ItemTemplate>
 
-            <asp:Button ID="btnDay" runat="server" CssClass='li <%= DataBinder.Eval(Container.DataItem, "Status")%>' CommandName="DaySelected" CommandArgument='<%# DataBinder.Eval(Container.DataItem, "Day")%>' Text='<%# DataBinder.Eval(Container.DataItem, "Day") !=null?  ((DateTime)DataBinder.Eval(Container.DataItem, "Day")).ToString("dd"):"" %>'></asp:Button>
-
+            <%--<asp:Button ID="btnDay" runat="server" CssClass='li' CommandName="DaySelected" CommandArgument='<%# DataBinder.Eval(Container.DataItem, "Day")%>' Text='<%# DataBinder.Eval(Container.DataItem, "Day") !=null?  ((DateTime)DataBinder.Eval(Container.DataItem, "Day")).ToString("dd"):"" %>'></asp:Button>--%>
+            <asp:LinkButton ID="btnDay" runat="server" CssClass='li' CommandName="DaySelected" CommandArgument='<%# DataBinder.Eval(Container.DataItem, "Day")%>' Text=''>
+                <div><%# DataBinder.Eval(Container.DataItem, "Day") !=null?  ((DateTime)DataBinder.Eval(Container.DataItem, "Day")).ToString("dd"):"" %></div>
+                <div><%# GetHijriDate(Container.DataItem) %></div>
+            </asp:LinkButton>
         </ItemTemplate>
 
         <FooterTemplate>
@@ -209,10 +223,10 @@
         <HeaderTemplate>
             <div class="slots">
                 <div>
-                    <div class="li" style="padding-top: 5px; width: 100px; font-weight: bold; margin-left:0px">
-                       اليوم
+                    <div class="li" style="padding-top: 5px; width: 100px; font-weight: bold; margin-left: 0px">
+                        اليوم
                     </div>
-                    <div class="li" style="padding-top: 5px; width: 100px; margin-left:0px">
+                    <div class="li" style="padding-top: 5px; width: 100px; margin-left: 0px">
                         <%# SelectedDay.Value.ToString("yyyy/MM/dd") %>
                     </div>
                 </div>
@@ -223,7 +237,7 @@
         </HeaderTemplate>
         <ItemTemplate>
 
-            <asp:Button ID="btnSlot" runat="server" CssClass="li " CommandName="SlotSelected" CommandArgument='<%# DataBinder.Eval(Container.DataItem, "StartTime")%>' Text='<%# ((DateTime)DataBinder.Eval(Container.DataItem, "StartTime")).ToString("hh") +" - "+((DateTime)DataBinder.Eval(Container.DataItem, "EndTime")).ToString("hh ") %>'></asp:Button>
+            <asp:Button ID="btnSlot" runat="server" CssClass="li" CommandName="SlotSelected" CommandArgument='<%# DataBinder.Eval(Container.DataItem, "StartTime")%>' Text='<%# ((DateTime)DataBinder.Eval(Container.DataItem, "StartTime")).ToString("hh") +" - "+((DateTime)DataBinder.Eval(Container.DataItem, "EndTime")).ToString("hh ") %>'></asp:Button>
 
         </ItemTemplate>
         <FooterTemplate>
@@ -231,3 +245,4 @@
         </FooterTemplate>
     </asp:Repeater>
 </div>
+
